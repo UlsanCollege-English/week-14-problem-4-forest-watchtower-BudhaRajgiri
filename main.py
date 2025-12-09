@@ -1,46 +1,39 @@
-
-## main.py
-```python
-"""
-HW04 — Forest Watchtower (Balanced Tree Check)
-
-Implement TreeNode and is_balanced(root) to check if a binary tree is height-balanced.
-"""
+from __future__ import annotations
+from typing import Optional, Tuple
 
 
 class TreeNode:
-    """
-    Simple binary tree node: value, left, right.
-    """
+    """Simple binary tree node."""
+    def __init__(self, value: int,
+                 left: Optional["TreeNode"] = None,
+                 right: Optional["TreeNode"] = None) -> None:
+        self.value = value
+        self.left = left
+        self.right = right
 
-    def __init__(self, value, left=None, right=None):
-        # TODO: store the given fields on the instance
-        # Example:
-        # self.value = value
-        # self.left = left
-        # self.right = right
-        pass
+    def __repr__(self) -> str:
+        return f"TreeNode({self.value})"
 
 
-def is_balanced(root):
+def is_balanced(root: Optional[TreeNode]) -> bool:
     """
     Return True if the binary tree rooted at `root` is height-balanced.
-
-    Empty tree (root is None) is considered balanced.
     """
-    # TODO (8 Steps of Coding, minimal prompts):
-    # - Design a helper that checks balance and height in one traversal.
-    # - Implement the recursive logic.
-    # - Test on small examples (empty tree, single node, skewed tree).
-    raise NotImplementedError("Implement is_balanced in main.py")
 
+    def check(node: Optional[TreeNode]) -> Tuple[bool, int]:
+        if node is None:
+            return True, 0
 
-if __name__ == "__main__":
-    # Optional: quick manual tree
-    #   1
-    #  / \
-    # 2   3
-    left = TreeNode(2)
-    right = TreeNode(3)
-    root = TreeNode(1, left, right)
-    print(is_balanced(root))
+        left_balanced, left_height = check(node.left)
+        right_balanced, right_height = check(node.right)
+
+        balanced = (
+            left_balanced
+            and right_balanced
+            and abs(left_height - right_height) <= 1
+        )
+        height = 1 + max(left_height, right_height)
+        return balanced, height
+
+    balanced, _ = check(root)
+    return balanced
